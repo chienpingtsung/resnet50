@@ -35,10 +35,10 @@ for data in tqdm(testloader, desc="Testing on: "):
     outputs = net(inputs)
     _, predicted = torch.max(outputs, 1)
 
-    TP += ((predicted == 1) & (labels == 1)).cpu().sum()
-    TN += ((predicted == 0) & (labels == 0)).cpu().sum()
-    FP += ((predicted == 1) & (labels == 0)).cpu().sum()
-    FN += ((predicted == 0) & (labels == 1)).cpu().sum()
+    TP += int(((predicted == 1) & (labels == 1)).sum())
+    TN += int(((predicted == 0) & (labels == 0)).sum())
+    FP += int(((predicted == 1) & (labels == 0)).sum())
+    FN += int(((predicted == 0) & (labels == 1)).sum())
 
 p = TP / (TP + FP)
 r = TP / (TP + FN)
