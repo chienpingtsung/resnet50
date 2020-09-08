@@ -27,14 +27,15 @@ net.eval()
 
 normal = []
 for data in tqdm(detectloader, desc="Detecting on: "):
-    inputs, path = data[0].to(device), data[2]
+    with torch.no_grad():
+        inputs, path = data[0].to(device), data[2]
 
-    outputs = net(inputs)
-    _, predicted = torch.max(outputs, 1)
+        outputs = net(inputs)
+        _, predicted = torch.max(outputs, 1)
 
-    for i, pre in enumerate(predicted):
-        if pre == 0:
-            normal.append(path[i])
+        for i, pre in enumerate(predicted):
+            if pre == 0:
+                normal.append(path[i])
 
 with open("detect.txt", 'wt') as f:
     f.write('\n'.join(normal))
