@@ -30,15 +30,16 @@ TN = 0
 FP = 0
 FN = 0
 for data in tqdm(testloader, desc="Testing on: "):
-    inputs, labels = data[0].to(device), data[1].to(device)
+    with torch.no_grad():
+        inputs, labels = data[0].to(device), data[1].to(device)
 
-    outputs = net(inputs)
-    _, predicted = torch.max(outputs, 1)
+        outputs = net(inputs)
+        _, predicted = torch.max(outputs, 1)
 
-    TP += int(((predicted == 1) & (labels == 1)).sum())
-    TN += int(((predicted == 0) & (labels == 0)).sum())
-    FP += int(((predicted == 1) & (labels == 0)).sum())
-    FN += int(((predicted == 0) & (labels == 1)).sum())
+        TP += int(((predicted == 1) & (labels == 1)).sum())
+        TN += int(((predicted == 0) & (labels == 0)).sum())
+        FP += int(((predicted == 1) & (labels == 0)).sum())
+        FN += int(((predicted == 0) & (labels == 1)).sum())
 
 p = TP / (TP + FP)
 r = TP / (TP + FN)
