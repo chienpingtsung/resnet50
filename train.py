@@ -35,6 +35,7 @@ scheduler = torch.optim.lr_scheduler.StepLR(optimizer, 30)
 min_loss = 1000
 min_loss_epoch = 0
 for epoch in range(100):
+    net.train()
     for data in tqdm(trainloader, desc="Running epoch {:3}: ".format(epoch + 1)):
         inputs, labels = data[0].to(device), data[1].to(device)
 
@@ -45,15 +46,17 @@ for epoch in range(100):
         loss.backward()
         optimizer.step()
 
+    net.eval()
     test_loss = 0.0
     test_times = 0
     for data in tqdm(testloader, desc="Testing epoch {:3}: ".format(epoch + 1)):
-        inputs, labels = data[0].to(device), data[1].to(device)
+        with torch.no_grad():
+            inputs, labels = data[0].to(device), data[1].to(device)
 
-        outputs = net(inputs)
-        loss = criterion(outputs, labels)
-        test_loss += loss.item()
-        test_times += 1
+            outputs = net(inputs)
+            loss = criterion(outputs, labels)
+            test_loss += loss.item()
+            test_times += 1
     test_loss /= test_times
     print("Epoch {:3} test_loss: {}".format(epoch + 1, test_loss))
 
